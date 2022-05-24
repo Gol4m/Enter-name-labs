@@ -367,13 +367,13 @@ class World:
                     
     def getting_weed(self):
         for plant in self.plants:
-                plant.parameters["weed"] = True
-                plant.get_position()
-                x = int(plant.parameters["coordinates"][0])
-                y = int(plant.parameters["coordinates"][1])
-                index = plant.parameters["index"]
-                count = self.game_map[x][y].get_cell_position(plant, index )
-                self.game_map[x][y].add_weed_on_cell(count, plant)
+            plant.parameters["weed"] = True
+            plant.get_position()
+            x = int(plant.parameters["coordinates"][0])
+            y = int(plant.parameters["coordinates"][1])
+            index = plant.parameters["index"]
+            count = self.game_map[x][y].get_cell_position(plant, index)
+            self.game_map[x][y].add_weed_on_cell(count, plant)
     
     def fertilizing_game_map(self):
         for plant in self.plants: 
@@ -388,9 +388,9 @@ class World:
 
     def commands(self, command):
         try:
-           # command = command.split(" ")
+            # command = command.split(" ")
             if command == "garden_info":
-                print("died from pests", self.died_from_pests)# от вредителей в целом(все что не урожай)
+                print("died from pests", self.died_from_pests)  # от вредителей в целом(все что не урожай)
                 print("died from hungry", self.died_from_hungry)
                 print("harvest of vegetables", self.harvest_of_vegetables)
                 print("harvest of fruits", self.harvest_of_apples)
@@ -417,9 +417,9 @@ class World:
             elif command == "water_plants":
                 self.watering_in_map()
             elif command == "delete_pests":
-               for i in self.plants:
-                   if i.parameters["type_id"] == 2:
-                       self.delete_pest_from_garden()
+                for i in self.plants:
+                    if i.parameters["type_id"] == 2:
+                        self.delete_pest_from_garden()
             elif command == "info":
                 try:
                     x = input()
@@ -431,6 +431,16 @@ class World:
                         raise()
                 except:
                     print("Wrong coordinates")
+            elif command == "save":
+                file = open(r'saved_game.txt', 'wb')
+                pickle.dump(self, file)
+                for i in range(self.map_size[0]):  # по строке
+                    for j in range(self.map_size[1]):
+                        pickle.dump(self.game_map[i][j], file)
+                for smth in self.plants:
+                    pickle.dump(smth, file)
+                file.close()
+                print("garden is saved")
             else:
                 raise()
             self.step_save()

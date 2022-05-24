@@ -14,6 +14,7 @@ class App:
         self.clock = pygame.time.Clock()
         self.running = True
         self.state = 'start'
+        self.garden = None
 
     def run(self):
         while self.running:
@@ -42,6 +43,7 @@ class App:
         # back = pygame.image.load("images/garden_background.png")
         # self.screen.blit(back,(20, 75))
         self.add_button_start_garden(20, 20)
+        self.add_button_load_garden(450, 20)
         self.draw_buttons()
         event = pygame.event.get()
         pygame_widgets.update(event)
@@ -219,7 +221,7 @@ class App:
         button_play = Button(self.screen,
                              h,
                              w,
-                             860,
+                             430,
                              40,
                              text='Garden simulator',
                              textColour=YELLOW,
@@ -246,6 +248,43 @@ class App:
             self.garden.add_pests_on_game_map()
         for i in range(0, count_of_plants):
             self.garden.add_plant_on_game_map()
+        self.garden.step_print()
+        self.garden.commands("next_day")
+        self.garden.step_print()
+        print(str(self.garden.weather.parameters["weather_is"]))
+        self.state = 'next_day'
+        print(str(self.garden.count_of_global_days))
+
+    def add_button_load_garden(self, h, w):
+        button_play = Button(self.screen,
+                             h,
+                             w,
+                             430,
+                             40,
+                             text='Load saved game',
+                             textColour=YELLOW,
+                             font=pygame.font.Font('fonts/tahoma.ttf', 23),
+                             fontSize=23,
+                             margin=20,
+                             inactiveColour=BLACK,
+                             hoverColour=BLUE,
+                             pressedColour=BLUE,
+                             onClick=self.button_load_garden)
+
+    def button_load_garden(self):
+        file = open(r'saved_game.txt', 'rb')
+        self.garden = pickle.load(file)
+        for i in range(0, self.garden.map_size[0]):
+            row = list()
+            for j in range(0, self.garden.map_size[1]):
+                Сell = pickle.load(file)
+                for smth in Сell.all_in_cell:
+                    self.garden.plants.append(smth)
+                row.append(Сell)
+            self.garden.game_map.append(row)
+        for smth in range(1, len(self.garden.plants)):
+            smth = pickle.load(file)
+        file.close()
         self.garden.step_print()
         self.garden.commands("next_day")
         self.garden.step_print()
