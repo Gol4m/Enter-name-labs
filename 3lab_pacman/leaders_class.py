@@ -1,7 +1,7 @@
 import json
 
 
-class Players:
+class Leader:
     
     leader = {
         "name": "",

@@ -4,7 +4,7 @@ import pygame_widgets
 from pygame_widgets.button import Button
 from player_class import *
 from enemy_class import *
-from Leaders_class import Players
+from leaders_class import Leader
 
 pygame.init()
 pygame.mixer.init()
@@ -31,7 +31,7 @@ class App:
 
         with open("data_file.json", "r") as read_file:
             self.leaders_list = json.load(read_file)
-        self.lead = Players(self.leaders_list)
+        self.lead = Leader(self.leaders_list)
 
         self.load()
         self.player = Player(self, vec(self.p_pos))
