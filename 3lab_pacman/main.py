@@ -1,4 +1,3 @@
-import pygame
 from app_class import *
 
 

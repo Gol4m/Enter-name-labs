@@ -1,5 +1,3 @@
-from pygame.math import Vector2 as vec
-
 # настройки окна
 TOP_BOTTOM_BUFFER = 50
 WIDTH, HEIGHT = 610, 670
@@ -23,6 +21,3 @@ START_FONT = 'Comic Sans MS'
 # настройки игрока
 # PLAYER_START_POS = (1, 1)
 PLAYER_COLOR = (255, 255, 0)
-
-# настройки мобов
-

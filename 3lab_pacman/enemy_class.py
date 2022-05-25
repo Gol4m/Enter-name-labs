@@ -6,7 +6,7 @@ vec = pygame.math.Vector2
 
 
 class Enemy:
-    def __init__(self, app, pos, number):
+    def __init__(self, app, pos, personality):
         self.app = app
         self.starting_pos = [pos.x, pos.y]
         self.grid_pos = pos
@@ -14,10 +14,10 @@ class Enemy:
         self.pix_pos = self.get_pix_pos()
         self.pix_pos_for_animation = self.get_pix_pos_for_animation()
         self.radius = int(self.app.cell_width//2)
-        self.number = number
+        self.personality_and_speed = personality
+        self.personality = self.set_personality()
         self.colour = self.set_colour()
         self.direction = vec(0, 0)
-        self.personality = self.set_personality()
         self.target = None
         self.eatable = False  # может быть съеден
         self.eaten = False  # съели
@@ -48,27 +48,29 @@ class Enemy:
             self.eatable = False
             self.eaten = False
             
-    prizrak = [pygame.image.load('images/p_57.png'), pygame.image.load('images/p_58.png')]
+    ghost = [pygame.image.load('images/p_57.png'), pygame.image.load('images/p_58.png')]
     
-    glaz = [pygame.image.load('images/p_59.png'), pygame.image.load('images/p_60.png'),
-            pygame.image.load('images/p_61.png'), pygame.image.load('images/p_62.png'),
-            pygame.image.load('images/p_63.png'), pygame.image.load('images/p_64.png'),
-            pygame.image.load('images/p_65.png'), pygame.image.load('images/p_66.png')]
+    eye = [pygame.image.load('images/p_59.png'), pygame.image.load('images/p_60.png'),
+           pygame.image.load('images/p_61.png'), pygame.image.load('images/p_62.png'),
+           pygame.image.load('images/p_63.png'), pygame.image.load('images/p_64.png'),
+           pygame.image.load('images/p_65.png'), pygame.image.load('images/p_66.png')]
     
     def draw(self):
         if self.eatable and not self.eaten:
             if self.image_count >= 9:
                 self.image_count = 0
-            self.app.screen.blit(self.prizrak[self.image_count // 5], (int(self.pix_pos_for_animation.x),
-                                                                      int(self.pix_pos_for_animation.y)))
+            self.app.screen.blit(self.ghost[self.image_count // 5], (int(self.pix_pos_for_animation.x),
+                                                                     int(self.pix_pos_for_animation.y)))
             self.image_count += 1
+
             # здесь призрак должен быть синим, когда просто монетку большую съели
         if self.eaten and self.eatable:
             if self.image_count >= 39:
                 self.image_count = 0
-            self.app.screen.blit(self.glaz[self.image_count // 5], (int(self.pix_pos_for_animation.x),
-                                                                    int(self.pix_pos_for_animation.y)))
+            self.app.screen.blit(self.eye[self.image_count // 5], (int(self.pix_pos_for_animation.x),
+                                                                   int(self.pix_pos_for_animation.y)))
             self.image_count += 1
+
             # здесь глазки бегущие на базу
         if not self.eatable and not self.eaten:
             if self.image_count >= 39:
@@ -76,18 +78,15 @@ class Enemy:
             self.app.screen.blit(self.colour[self.image_count // 5], (int(self.pix_pos_for_animation.x),
                                                                       int(self.pix_pos_for_animation.y)))
             self.image_count += 1
+
         #pygame.draw.circle(self.app.screen, self.colour, (int(self.pix_pos.x), int(self.pix_pos.y)), self.radius)
 
     def set_speed(self):
         if self.eaten:
-            speed = 1
+            return 1
         elif self.eatable:
-            speed = 0.5
-        elif self.personality in ["speedy", "scared"]:
-            speed = 1
-        else:
-            speed = 0.7
-        return speed
+            return 0.5
+        return self.personality_and_speed["speed"]
 
     def set_target(self):
         if self.eatable or self.eaten:
@@ -135,7 +134,7 @@ class Enemy:
         return path[1]
 
     def BFS(self, start, target):
-        grid = [[0 for x in range(28)] for x in range(30)]
+        grid = [[0 for _ in range(28)] for _ in range(30)]
         for cell in self.app.walls:
             if cell.x < 28 and cell.y < 30:
                 grid[int(cell.y)][int(cell.x)] = 1
@@ -192,35 +191,36 @@ class Enemy:
                    self.grid_pos.y * self.app.cell_height + TOP_BOTTOM_BUFFER // 2)
 
     def set_colour(self):
-        if self.number == 0:
+        if self.personality == "speedy":
             blue = [pygame.image.load('images/p_10.png'), pygame.image.load('images/p_11.png'),
                     pygame.image.load('images/p_12.png'), pygame.image.load('images/p_13.png'),
                     pygame.image.load('images/p_14.png'), pygame.image.load('images/p_15.png'),
                     pygame.image.load('images/p_16.png'), pygame.image.load('images/p_17.png')]
             return blue
-        if self.number == 1:
+        if self.personality == "slow":
             #return 0, 255, 0
-            pink =[pygame.image.load('images/p_37.png'), pygame.image.load('images/p_38.png'),
+            pink = [pygame.image.load('images/p_37.png'), pygame.image.load('images/p_38.png'),
                     pygame.image.load('images/p_39.png'), pygame.image.load('images/p_40.png'),
                     pygame.image.load('images/p_41.png'), pygame.image.load('images/p_42.png'),
                     pygame.image.load('images/p_43.png'), pygame.image.load('images/p_44.png')]
             return pink
-        if self.number == 2:#red
+        if self.personality == "random":
             #return 255, 0, 0
             red = [pygame.image.load('images/p_29.png'), pygame.image.load('images/p_30.png'),
-                    pygame.image.load('images/p_31.png'), pygame.image.load('images/p_32.png'),
-                    pygame.image.load('images/p_33.png'), pygame.image.load('images/p_34.png'),
-                    pygame.image.load('images/p_35.png'), pygame.image.load('images/p_36.png')]
+                   pygame.image.load('images/p_31.png'), pygame.image.load('images/p_32.png'),
+                   pygame.image.load('images/p_33.png'), pygame.image.load('images/p_34.png'),
+                   pygame.image.load('images/p_35.png'), pygame.image.load('images/p_36.png')]
             return red
-        if self.number == 3:
-            red = [pygame.image.load('images/p_45.png'), pygame.image.load('images/p_46.png'),
-                    pygame.image.load('images/p_47.png'), pygame.image.load('images/p_48.png'),
-                    pygame.image.load('images/p_49.png'), pygame.image.load('images/p_50.png'),
-                    pygame.image.load('images/p_51.png'), pygame.image.load('images/p_52.png')]
-            return red
+        if self.personality == "scared":
+            orange = [pygame.image.load('images/p_45.png'), pygame.image.load('images/p_46.png'),
+                      pygame.image.load('images/p_47.png'), pygame.image.load('images/p_48.png'),
+                      pygame.image.load('images/p_49.png'), pygame.image.load('images/p_50.png'),
+                      pygame.image.load('images/p_51.png'), pygame.image.load('images/p_52.png')]
+            return orange
             #return 255, 170, 50
 
     def set_personality(self):
+        """
         if self.number == 0:
             return "speedy"
         elif self.number == 1:
@@ -229,3 +229,5 @@ class Enemy:
             return "random"
         elif self.number == 3:
             return "scared"
+        """
+        return self.personality_and_speed["personality"]
