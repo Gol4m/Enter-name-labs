@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<table title="table_1">
+	<columns>
+		<column title="Product" type_of_data="str"/>
+		<column title="Manufacture" type_of_data="str"/>
+		<column title="UMN" type_of_data="int"/>
+		<column title="Quantity" type_of_data="int"/>
+		<column title="Address" type_of_data="str"/>
+	</columns>
+	<records>
+		<record>
+			<element Product="red lipstick"/>
+			<element Manufacture="vitex"/>
+			<element UMN="23456"/>
+			<element Quantity="67"/>
+			<element Address="Belarus"/>
+		</record>
+		<record>
+			<element Product="foundation"/>
+			<element Manufacture="belita"/>
+			<element UMN="18475"/>
+			<element Quantity="7"/>
+			<element Address="China"/>
+		</record>
+		<record>
+			<element Product="concealer"/>
+			<element Manufacture="lika-skin"/>
+			<element UMN="13466"/>
+			<element Quantity="78"/>
+			<element Address="Litva"/>
+		</record>
+		<record>
+			<element Product="bronzer"/>
+			<element Manufacture="lika-skin"/>
+			<element UMN="94853"/>
+			<element Quantity="264"/>
+			<element Address="Poland"/>
+		</record>
+		<record>
+			<element Product="blush"/>
+			<element Manufacture="rozeeeee"/>
+			<element UMN="1543"/>
+			<element Quantity="4654"/>
+			<element Address="China"/>
+		</record>
+		<record>
+			<element Product="nail polish red"/>
+			<element Manufacture="pak-hac-in"/>
+			<element UMN="56832"/>
+			<element Quantity="89"/>
+			<element Address="Koreya"/>
+		</record>
+		<record>
+			<element Product="nail polish pink"/>
+			<element Manufacture="pak-hac-in"/>
+			<element UMN="654321"/>
+			<element Quantity="530"/>
+			<element Address="Koreya"/>
+		</record>
+		<record>
+			<element Product="nail polish white"/>
+			<element Manufacture="pak-hac-in"/>
+			<element UMN="56832"/>
+			<element Quantity="849"/>
+			<element Address="Koreya"/>
+		</record>
+		<record>
+			<element Product="nail polish green"/>
+			<element Manufacture="pak-hac-in"/>
+			<element UMN="56832"/>
+			<element Quantity="895"/>
+			<element Address="Koreya"/>
+		</record>
+		<record>
+			<element Product="perfume sweet devil"/>
+			<element Manufacture="chanel"/>
+			<element UMN="654321"/>
+			<element Quantity="564"/>
+			<element Address="France"/>
+		</record>
+		<record>
+			<element Product="perfume romance"/>
+			<element Manufacture="chanel"/>
+			<element UMN="654321"/>
+			<element Quantity="987"/>
+			<element Address="France"/>
+		</record>
+		<record>
+			<element Product="perfume dark night"/>
+			<element Manufacture="chanel"/>
+			<element UMN="654321"/>
+			<element Quantity="657"/>
+			<element Address="France"/>
+		</record>
+		<record>
+			<element Product="perfume sweet angel"/>
+			<element Manufacture="chanel"/>
+			<element UMN="654321"/>
+			<element Quantity="6189"/>
+			<element Address="France"/>
+		</record>
+		<record>
+			<element Product="lop gloss t2"/>
+			<element Manufacture="vivvene cabo"/>
+			<element UMN="93456"/>
+			<element Quantity="23"/>
+			<element Address="Ukraine"/>
+		</record>
+		<record>
+			<element Product="lop gloss t4"/>
+			<element Manufacture="vivvene cabo"/>
+			<element UMN="93456"/>
+			<element Quantity="226"/>
+			<element Address="Ukraine"/>
+		</record>
+		<record>
+			<element Product="lop gloss t6"/>
+			<element Manufacture="vivvene cabo"/>
+			<element UMN="93456"/>
+			<element Quantity="636"/>
+			<element Address="Ukraine"/>
+		</record>
+		<record>
+			<element Product="lop gloss t8"/>
+			<element Manufacture="vivvene cabo"/>
+			<element UMN="93456"/>
+			<element Quantity="236"/>
+			<element Address="Ukraine"/>
+		</record>
+		<record>
+			<element Product="lop gloss t10"/>
+			<element Manufacture="vivvene cabo"/>
+			<element UMN="93456"/>
+			<element Quantity="654"/>
+			<element Address="Ukraine"/>
+		</record>
+		<record>
+			<element Product="ffffff"/>
+			<element Manufacture="fgfgfgf"/>
+			<element UMN="65432"/>
+			<element Quantity="34"/>
+			<element Address="Belarus"/>
+		</record>
+		<record>
+			<element Product="weed"/>
+			<element Manufacture=""/>
+			<element UMN="0"/>
+			<element UMN="0"/>
+			<element Address="Afganistan"/>
+		</record>
+	</records>
+</table>
