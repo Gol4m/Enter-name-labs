@@ -84,9 +84,16 @@ class World:
 
         ###################################
 
-    def __init__(self, map_size):
+    def __init__(self, map_size=None):
         self.game_map = list()
-        self.map_size = tuple()
+        if map_size is None:
+            map_size = [2, 2]
+        self.map_size = map_size
+        for i in range(0, map_size[0]):
+            row = list()
+            for j in range(0, map_size[1]):
+                row.append(World.Cell([i, j]))
+            self.game_map.append(row)
         self.plants = list()
         self.weather = Weather()
         self.step = 0
@@ -98,12 +105,6 @@ class World:
         self.weather_today_is = ""  # погодка
         self.index = 0  # уникальный для каждой сущности(показывает порядковый номер добавления в сад)
         self.count_of_days = 0
-        self.map_size = map_size
-        for i in range(0, map_size[0]):
-            row = list()
-            for j in range(0, map_size[1]):
-                row.append(World.Cell([i, j]))
-            self.game_map.append(row)
 
     ############################    COMMANDS    ############################
 
@@ -127,7 +128,7 @@ class World:
                             self.getting_weed()
             elif command == "add_plant":
                 self.add_plant_on_game_map()
-            elif command == "help":
+            elif command == "help_plants":
                 self.fertilizing_game_map()
             elif command == "add_tree":
                 self.add_trees_on_game_map()
@@ -157,6 +158,22 @@ class World:
             print("Wrong command")
 
     ############################    HELP FUNCTIONS    ############################
+
+    def start_garden(self):
+        count_of_plants = 3
+        count_of_pests = 3
+        count_of_trees = 3
+        for i in range(0, count_of_pests):
+            self.add_pests_on_game_map()
+        for i in range(0, count_of_plants):
+            self.add_plant_on_game_map()
+        for i in range(0, count_of_trees):
+            self.add_trees_on_game_map()
+        for i in range(0, count_of_pests):
+            self.add_pests_on_game_map()
+        for i in range(0, count_of_plants):
+            self.add_plant_on_game_map()
+        self.step_print()
 
     def find_plant_position(self):
         x = random.randint(0, self.map_size[0] - 1)
@@ -361,6 +378,7 @@ class World:
                     break
                 elif command == "n":
                     print("no water")
+                    command = ""
                     break
                 else:
                     raise ()

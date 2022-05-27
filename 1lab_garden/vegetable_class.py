@@ -39,9 +39,9 @@ class Carrot(MainClass):
             if days <= 2:
                 self.parameters["life_points"] -= 2
             if 2 < days <= 4:
-                self.parameters["life_points"] -= 20
+                self.parameters["life_points"] -= 10
             if days > 4:
-                self.parameters["life_points"] -= 50    
+                self.parameters["life_points"] -= 20
         if self.parameters["watered"]:  # растет только если полито
             self.parameters["start_points"] += 3
         if self.parameters["illness"]:  # если болезнь есть, то при росте отниметься 10 хп
