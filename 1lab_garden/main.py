@@ -1,8 +1,9 @@
 import os
 import pickle
-from Gamemap import World
+from game_map_class import World
 
 if __name__ == "__main__":
+    garden = None
     print("Chose first command : 'start' or 'load' from file")
     command_for_start = ""
     os.system("cls")
@@ -34,10 +35,10 @@ if __name__ == "__main__":
                 for i in range(0, garden.map_size[0]):
                     row = list()
                     for j in range(0, garden.map_size[1]):
-                        Сell = pickle.load(file)
-                        for smth in Сell.all_in_cell:
+                        cell = pickle.load(file)
+                        for smth in cell.all_in_cell:
                             garden.plants.append(smth)
-                        row.append(Сell)
+                        row.append(cell)
                     garden.game_map.append(row)
                 for smth in range(1, len(garden.plants)):
                     smth = pickle.load(file)

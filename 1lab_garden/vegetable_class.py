@@ -1,4 +1,4 @@
-from PlantClass import MainClass
+from plants_class import MainClass
 import random
 
 
@@ -33,9 +33,9 @@ class Carrot(MainClass):
         return position
 
     def grow_up(self):
-        if self.parameters["watered"]:  #растет только если полито
+        if self.parameters["watered"]:  # растет только если полито
             self.parameters["start_points"] += 3
-        if self.parameters["illness"]:  #если болезнь есть, то при росте отниметься 10 хп
+        if self.parameters["illness"]:  # если болезнь есть, то при росте отниметься 10 хп
             self.parameters["life_points"] -= 10
         if self.parameters["points_to_grow_up"] <= self.parameters["start_points"] and self.parameters["life_points"] > 5:
             return self
@@ -48,17 +48,17 @@ class Carrot(MainClass):
         else:
             return None
 
-    def get_illness_check(self):  #получение болезни (шанс 40%)
+    def get_illness_check(self):  # получение болезни (шанс 40%)
         self.parameters["illness"] = random.choices([True, False], weights=[40, 60], k=1)[0]
         return self
 
-    def get_rid_of_illness_check(self):  #избавление от болезни (шанс 80%)
+    def get_rid_of_illness_check(self):  # избавление от болезни (шанс 80%)
         self.parameters["illness"] = random.choices([True, False], weights=[20, 80], k=1)[0]
         return self
 
     def water(self):
-        if not self.parameters["watered"]:  #если watered == false, то
+        if not self.parameters["watered"]:  # если watered == false, то
             self.parameters["watered"] = True
         else:
-            self.parameters["life_points"] -= 10  #если растение уже было полито (watered == True), то отнимаем 10 хп
+            self.parameters["life_points"] -= 10  # если растение уже было полито (watered == True), то отнимаем 10 хп
         return self

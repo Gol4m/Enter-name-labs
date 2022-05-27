@@ -1,8 +1,8 @@
-from PlantClass import MainClass
+from plants_class import MainClass
 import random
 
 
-class Trees1(MainClass):
+class Tree(MainClass):
     def __init__(self, coordinates, garden):
         super().__init__(garden)
         self.parameters = {
@@ -35,16 +35,16 @@ class Trees1(MainClass):
         return position
 
     def grow_up(self, days):
-        if self.parameters["weed"] is True:  #если есть сорняки
+        if self.parameters["weed"] is True:  # если есть сорняки
             if days <= 2:
                 self.parameters["life_points"] -= 2
-            if days > 2 and days <= 4:
-                self.parameters["life_points"] -= 20
+            if 2 < days <= 4:
+                self.parameters["life_points"] -= 10
             if days > 4:
-                self.parameters["life_points"] -= 50    
-        if self.parameters["watered"]:  #растет только если полито
+                self.parameters["life_points"] -= 20
+        if self.parameters["watered"]:  # растет только если полито
             self.parameters["start_points"] += 4
-        if self.parameters["illness"]:  #если болезнь есть, то при росте отниметься 20 хп
+        if self.parameters["illness"]:  # если болезнь есть, то при росте отниметься 20 хп
             self.parameters["life_points"] -= 20
         if self.parameters["start_points"] >= self.parameters["points_to_grow_up"] and self.parameters["life_points"] > 100:
             self.parameters["start_points"] = 0
@@ -56,11 +56,11 @@ class Trees1(MainClass):
         else:
             return None
 
-    def get_illness_check(self):  #получение болезни (шанс 40%)
+    def get_illness_check(self):  # получение болезни (шанс 40%)
         self.parameters["illness"] = random.choices([True, False], weights=[40, 60], k=1)[0]
         return self
 
-    def get_rid_of_illness_check(self):  #избавление от болезни (шанс 80%)
+    def get_rid_of_illness_check(self):  # избавление от болезни (шанс 80%)
         self.parameters["illness"] = random.choices([True, False], weights=[20, 80], k=1)[0]
         return self
 

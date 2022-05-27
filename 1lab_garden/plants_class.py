@@ -18,7 +18,7 @@ class MainClass:
         if world is not None:
             self.world = world
 
-    def attack_plant(self):
+    def attack_plant(self, plant_to_attack):
         pass
 
     def aging(self):
