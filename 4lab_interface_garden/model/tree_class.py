@@ -1,7 +1,8 @@
-from model.PlantClass import MainClass
+from model.plant_class import MainClass
 import random
 
-class Trees1(MainClass):
+
+class Trees(MainClass):
     def __init__(self, coordinates, garden):
         super().__init__(garden)
         self.parameters = {
@@ -11,9 +12,9 @@ class Trees1(MainClass):
             "symbol_on_map": "T",
             "age": 0,
             "coordinates": coordinates,
-            "max_age": 20,
-            "life_points": 600,
-            "points_to_grow_up": 20,
+            "max_age": 100,
+            "life_points": 300,
+            "points_to_grow_up": 8,
             "start_points": 0,
             "illness": False,
             "watered": False,
@@ -34,16 +35,16 @@ class Trees1(MainClass):
         return position
 
     def grow_up(self, days):
-        if self.parameters["weed"] is True:  #если есть сорняки
+        if self.parameters["weed"] is True:  # если есть сорняки
             if days <= 2:
                 self.parameters["life_points"] -= 2
-            if days > 2 and days <= 4:
-                self.parameters["life_points"] -= 15
+            if 2 < days <= 4:
+                self.parameters["life_points"] -= 10
             if days > 4:
-                self.parameters["life_points"] -= 30    
-        if self.parameters["watered"]:  #растет только если полито
+                self.parameters["life_points"] -= 20
+        if self.parameters["watered"]:  # растет только если полито
             self.parameters["start_points"] += 4
-        if self.parameters["illness"]:  #если болезнь есть, то при росте отниметься 20 хп
+        if self.parameters["illness"]:  # если болезнь есть, то при росте отниметься 20 хп
             self.parameters["life_points"] -= 20
         if self.parameters["start_points"] >= self.parameters["points_to_grow_up"] and self.parameters["life_points"] > 100:
             self.parameters["start_points"] = 0
@@ -55,12 +56,12 @@ class Trees1(MainClass):
         else:
             return None
 
-    def get_illness_check(self):  #получение болезни (шанс 40%)
+    def get_illness_check(self):  # получение болезни (шанс 40%)
         self.parameters["illness"] = random.choices([True, False], weights=[40, 60], k=1)[0]
         return self
 
-    def get_rid_of_illness_check(self):  #избавление от болезни (шанс 80%)
-        self.parameters["illness"] = random.choices([True, False], weights=[60, 40], k=1)[0]
+    def get_rid_of_illness_check(self):  # избавление от болезни (шанс 80%)
+        self.parameters["illness"] = random.choices([True, False], weights=[20, 80], k=1)[0]
         return self
 
     def water(self):

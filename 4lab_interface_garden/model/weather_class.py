@@ -1,6 +1,7 @@
 import random
 
-class TheWeather:
+
+class Weather:
     parameters = {
         "counter_for_plants": 0,
         "counter_for_pests": 0,

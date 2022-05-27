@@ -1,7 +1,7 @@
 import pygame_widgets
 from pygame_widgets.button import Button
 
-from model.Gamemap import *
+from model.game_map_class import *
 
 
 class Controller:

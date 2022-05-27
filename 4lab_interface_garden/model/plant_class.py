@@ -1,4 +1,3 @@
-
 class MainClass:
     parameters = {
         "index": 0,
@@ -20,7 +19,7 @@ class MainClass:
         if world is not None:
             self.world = world
 
-    def attack_plant(self):
+    def attack_plant(self, plant_to_attack):
         pass
 
     def aging(self):
@@ -29,7 +28,7 @@ class MainClass:
     def get_position(self):
         pass
 
-    def grow_up(self):
+    def grow_up(self, days):
         pass
 
     def opportunity_to_live(self):

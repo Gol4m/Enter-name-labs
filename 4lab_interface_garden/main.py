@@ -2,7 +2,7 @@ import gui
 import console
 import click
 from click_shell import shell
-from model.Gamemap import World
+from model.game_map_class import World
 from interface import *
 from restore.restore_service import RestoreService
 

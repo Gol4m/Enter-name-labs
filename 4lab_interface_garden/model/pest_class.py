@@ -1,6 +1,7 @@
-from model.PlantClass import MainClass
+from model.plant_class import MainClass
 
-class Pests(MainClass):
+
+class Pest(MainClass):
     def __init__(self, coordinates, garden):
         super().__init__(garden)
         self.parameters = {
@@ -12,7 +13,7 @@ class Pests(MainClass):
             "coordinates": coordinates,
             "max_age": 10,
             "life_points": 100,
-            "damage": 10,
+            "damage": 40,
             "hungry": True,
             "weed": False
         }
@@ -34,7 +35,7 @@ class Pests(MainClass):
         self.parameters["hungry"] = False
         plant_for_eat.parameters["life_points"] -= self.parameters["damage"]
         if self.parameters["life_points"] == 100:
-            self.parameters["life_points"] == 100
+            pass
         else:
             self.parameters["life_points"] += 10
         if plant_for_eat.parameters["life_points"] <= 0:
