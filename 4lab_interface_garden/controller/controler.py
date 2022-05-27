@@ -3,6 +3,7 @@ from pygame_widgets.button import Button
 
 from model.Gamemap import *
 
+
 class Controller:
     def __init__(self):
         self.garden = None
@@ -40,9 +41,6 @@ class Controller:
     def get_count_of_global_days(self):
         return self.garden.count_of_global_days
            
-    def get_harvest_of_apples(self):
-        return self.garden.harvest_of_apples
-    
     def get_harvest_of_apples(self):
         return self.garden.harvest_of_apples
     

@@ -1,8 +1,6 @@
-import os
-import pickle
 import click
 from click_shell import shell
-from model.Gamemap import World
+
 from interface import *
 
 
@@ -28,7 +26,7 @@ def run_cli_interface(model: World):
 
 
 @app.command(help='Create garden plot.', name='start-garden')
-def start_gerden():
+def start_garden():
     garden.start_garden()
 
 
@@ -67,7 +65,7 @@ def save_garden():
     garden.commands("save")
 
 
-@app.command(help='Inforamtion about any object.', name='info')
+@app.command(help='Information about any object.', name='info')
 def save_garden():
     garden.commands("info")
 

@@ -378,11 +378,12 @@ class App:
                              onClick=self.button_load_garden)
 
     def button_load_garden(self):
+        self.controller.garden_init(World([1, 2]))
         file = open(r'saved_game.txt', 'rb')
         self.controller.garden_init(pickle.load(file))
         for i in range(0, self.controller.get_map_size(0)):
             row = list()
-            for j in range(0, self.controller.get_map_size[1]):
+            for j in range(0, self.controller.get_map_size(1)):
                 Сell = pickle.load(file)
                 for smth in Сell.all_in_cell:
                     self.controller.plant_add(smth)
@@ -391,12 +392,12 @@ class App:
         for smth in range(1, len(self.controller.get_list_of_plants())):
             smth = pickle.load(file)
         file.close()
-       # self.controller.step_print()
+        #self.controller.step_print()
         self.controller.commands("next_day")
-       # self.controller.step_print()
-       # print(str(self.controller.get_weather()))
+        #self.controller.step_print()
+        #print(str(self.controller.get_weather()))
         self.state = 'next_day'
-       # print(str(self.controller.get_count_of_global_days()))
+        #print(str(self.controller.get_count_of_global_days()))
 
     def add_button_next_day(self, h, w):
         button_play = Button(self.screen,
@@ -981,15 +982,15 @@ class App:
         self.add_button_2(780, 70)
         self.add_button_01(650, 170)
         self.add_button_02(720, 170)
-        self.add_button_03(780,170 )
-        self.add_button_04(840,170)
+        self.add_button_03(780, 170)
+        self.add_button_04(840, 170)
         self.add_button_check_info(700, 220)
-       # self.add_button_back(20,540)
+        #self.add_button_back(20,540)
         self.draw_text("Find informanion about plant :", self.screen, [150, 20], 26, WHITE, FONT)
         self.draw_text("Change line: ", self.screen, [690, 20], 26, WHITE, FONT)
-       # self.draw_text(str(self.controller.get_harvest_of_apples()), self.screen, [250, 70], 26, WHITE, FONT)
+        #self.draw_text(str(self.controller.get_harvest_of_apples()), self.screen, [250, 70], 26, WHITE, FONT)
         self.draw_text("Change plant: ", self.screen, [690, 120], 26, WHITE, FONT)
-       # self.draw_text(str(self.controller.get_harvest_of_apples()), self.screen, [250, 70], 26, WHITE, FONT)
+        #self.draw_text(str(self.controller.get_harvest_of_apples()), self.screen, [250, 70], 26, WHITE, FONT)
         event = pygame.event.get()
         pygame_widgets.update(event)
         pygame.display.update()

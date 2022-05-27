@@ -15,7 +15,7 @@ class World:
         list_for_print = list()
         new_list = list()
 
-        def __init__(self, coordinates) :
+        def __init__(self, coordinates):
             self._coordinates = coordinates
             self.all_in_cell = list()
             self.list_for_print = list()
