@@ -60,7 +60,34 @@ class World:
                 row.append(World.Cell([i, j]))
             self.game_map.append(row)
 
-    #def check_to_add_in_cell(self):
+    ############################    COMMANDS    ############################
+
+    def commands(self, command):
+        try:
+            # command = command.split(" ")
+            if command == "garden_info":
+                print("died from pests", self.died_from_pests)
+                print("died from hungry", self.died_from_hungry)
+                print("harvest of vegetables", self.harvest_of_vegetables)
+                print("harvest of fruits", self.harvest_of_apples)
+            elif command == "next_day":
+                self.life_cycle()
+            elif command == "add_plant":
+                self.add_plant_on_game_map()
+            elif command == "add_tree":
+                self.add_trees_on_game_map()
+            elif command == "add_pests":
+                self.add_pests_on_game_map()
+            elif command == "water_plants":
+                self.watering_in_map()
+            else:
+                raise()
+            self.step_save()
+        except:
+            print("Wrong command")
+
+    ############################    FIND FUNCTIONS    ############################
+
     def find_plant_position(self):
         x = random.randint(0, self.map_size[0] - 1)
         y = random.randint(0, self.map_size[1] - 1)
@@ -77,6 +104,8 @@ class World:
             return False
         else:
             return True
+
+    ############################    ADD FUNCTIONS    ############################
 
     def add_pests_on_game_map(self):
         if self.check_to_add() is True:
@@ -108,11 +137,15 @@ class World:
         else:
             print("No place!")
 
+    ############################    PRINT    ############################
+
     def step_print(self):
         for row in self.game_map:
             for Cell in row:
                 print(Cell.print_cell())
             # print("")
+
+    ############################    AGING    ############################
 
     def aging_in_map(self):
         for smth in self.plants:
@@ -123,6 +156,8 @@ class World:
                 x = int(smth.parameters["coordinates"][0])
                 y = int(smth.parameters["coordinates"][1])
                 self.game_map[x][y].remove_smth_from_cell(smth)
+
+    ############################    GROW UP FUNCTIONS    ############################
 
     def plants_grow_up(self):
         for smth in self.plants:
@@ -163,6 +198,8 @@ class World:
                     if tree is not None:
                         self.harvest_of_apples += 1
 
+    ############################    PESTS FUNCTIONS    ############################
+
     def eat_plant_on_map(self):
         for pests in self.plants:
             if pests.parameters["type_id"] == 2:
@@ -195,6 +232,13 @@ class World:
                                 self.game_map[int(plant_for_eat.parameters["coordinates"][0])][
                                     int(plant_for_eat.parameters["coordinates"][1])].remove_smth_from_cell(plant_for_eat)
 
+    def everyday_hungry(self):
+        for pests in self.plants:
+            if pests.parameters["type_id"] == 2:
+                pests.parameters["hungry"] = True
+
+    ############################    DEAD CHECK    ############################
+
     def opportunity_to_live_on_map(self):
         for smth in self.plants:
             if smth.parameters["type_id"] == 2:
@@ -207,10 +251,7 @@ class World:
                     self.plants.remove(smth)
                     self.died_from_hungry += 1
 
-    def everydays_hungry(self):
-        for pests in self.plants:
-            if pests.parameters["type_id"] == 2:
-                pests.parameters["hungry"] = True
+    ############################    WEATHER FUNCTIONS    ############################
 
     def weather_today(self):
         self.weather.what_weather_today()
@@ -245,6 +286,8 @@ class World:
             except:
                 print("Wrong command!")
 
+    ############################    LIFE CYCLE    ############################
+
     def life_cycle(self):
         self.weather_today()
         self.want_to_water_plants()
@@ -253,11 +296,15 @@ class World:
         self.eat_plant_on_map()
         self.aging_in_map()
         self.opportunity_to_live_on_map()
-        self.everydays_hungry()
-#        print("умерли от вредителей", self.died_from_pests)
-#        print("умерло от голода", self.died_from_hungry)
-#        print("урожай овощей", self.harvest_of_vegetables)
-#        print("урожай яблок", self.harvest_of_apples)
+        self.everyday_hungry()
+        """
+        print("умерли от вредителей", self.died_from_pests)
+        print("умерло от голода", self.died_from_hungry)
+        print("урожай овощей", self.harvest_of_vegetables)
+        print("урожай яблок", self.harvest_of_apples)
+        """
+
+    ############################    SAVE    ############################
 
     def step_save(self):
         file = open(r'saved_game.txt', 'wb')
@@ -269,27 +316,3 @@ class World:
             pickle.dump(smth, file)
         file.close()
         # print("garden is saved")
-
-    def commands(self, command):
-        try:
-            # command = command.split(" ")
-            if command == "garden_info":
-                print("died from pests", self.died_from_pests)
-                print("died from hungry", self.died_from_hungry)
-                print("harvest of vegetables", self.harvest_of_vegetables)
-                print("harvest of fruits", self.harvest_of_apples)
-            elif command == "next_day":
-                self.life_cycle()
-            elif command == "add_plant":
-                self.add_plant_on_game_map()
-            elif command == "add_tree":
-                self.add_trees_on_game_map()
-            elif command == "add_pests":
-                self.add_pests_on_game_map()
-            elif command == "water_plants":
-                self.watering_in_map()
-            else:
-                raise()
-            self.step_save()
-        except:
-            print("Wrong command")
