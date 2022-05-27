@@ -1,4 +1,4 @@
-from tree_class import Tree
+from tree_class import Trees
 from vegetable_class import Carrot
 from pest_class import Pest
 from weather_class import Weather
@@ -8,14 +8,16 @@ import pickle
 
 class World:
     class Cell:
-        coordinates = tuple()
-        all_in_cell = list()  # не только растения
-        list_for_print = list()
-
         def __init__(self, coordinates):
+            self.coordinates = tuple()
+            self.all_in_cell = list()  # не только растения
+            self.list_for_print = list()
+            self.new_list = list()
             self._coordinates = coordinates
             self.all_in_cell = list()
             self.list_for_print = list()
+
+        ########    ADD FUNCTIONS    ########
 
         def add_plant_on_cell(self, plant):  # любая сущность
             if len(self.all_in_cell) < 4:
@@ -24,35 +26,78 @@ class World:
             else:
                 return
 
+        def add_weed_on_cell(self, idx):
+            d = None
+            if self.all_in_cell[idx].parameters["type_id"] == 1:
+                d = "C!"
+            if self.all_in_cell[idx].parameters["type_id"] == 2:
+                d = "P!"
+            if self.all_in_cell[idx].parameters["type_id"] == 3:
+                d = "T!"
+            self.list_for_print.pop(idx)
+            self.list_for_print.insert(idx, d)
+
+        ########    DELETE FUNCTIONS    ########
+
+        def delete_weed_from_cell(self, idx, plant):
+            self.list_for_print.pop(idx)
+            """
+            if plant.parameters["type_id"] == 1:
+                self.parameters["symbol_on_map"] = "C"
+            if plant.parameters["type_id"] == 2:
+                self.parameters["symbol_on_map"] = "P"
+            if plant.parameters["type_id"] == 3:
+                self.parameters["symbol_on_map"] = "T"
+            """
+            self.list_for_print.insert(idx, plant.parameters["symbol_on_map"])
+
+        def delete_smth_from_cell(self, smth):
+            for i in self.all_in_cell:
+                if i.parameters["index"] == smth.parameters["index"]:
+                    self.all_in_cell.remove(i)
+                    self.list_for_print.remove(i.parameters["symbol_on_map"])
+
+        ########    HELP FUNCTIONS    ########
+
         def check_to_add_in_cell(self):
             if len(self.all_in_cell) < 4:
                 return True
             else:
                 return False
 
+        def get_cell_position(self, smth, index):
+            idx = 0
+            for plant in self.all_in_cell:
+                if plant.parameters["type_id"] == smth.parameters["type_id"] and plant.parameters["index"] == index:
+                    return idx
+                else:
+                    idx += 1
+
+        ########    INFORMATION    ########
+
         def print_cell(self):
             if len(self.list_for_print) != 0:
                 return self.list_for_print
+
             else:
                 return "*"
 
-        def remove_smth_from_cell(self, smth):
-            self.all_in_cell.remove(smth)
-            self.list_for_print.remove(smth.parameters["symbol_on_map"])
-
-    game_map = list()
-    map_size = tuple()
-    plants = list()
-    weather = Weather()
-    step = 0
-    harvest_of_vegetables = 0
-    harvest_of_apples = 0
-    died_from_pests = 0
-    died_from_hungry = 0
-    died_from_illness = 0
-    weather_today_is = ""  # погодка
+        ###################################
 
     def __init__(self, map_size):
+        self.game_map = list()
+        self.map_size = tuple()
+        self.plants = list()
+        self.weather = Weather()
+        self.step = 0
+        self.harvest_of_vegetables = 0
+        self.harvest_of_apples = 0
+        self.died_from_pests = 0
+        self.died_from_hungry = 0
+        self.died_from_illness = 0
+        self.weather_today_is = ""  # погодка
+        self.index = 0  # уникальный для каждой сущности(показывает порядковый номер добавления в сад)
+        self.count_of_days = 0
         self.map_size = map_size
         for i in range(0, map_size[0]):
             row = list()
@@ -64,29 +109,54 @@ class World:
 
     def commands(self, command):
         try:
-            # command = command.split(" ")
             if command == "garden_info":
-                print("died from pests", self.died_from_pests)
+                print("died from pests", self.died_from_pests)  # от вредителей в целом (все что не урожай)
                 print("died from hungry", self.died_from_hungry)
                 print("harvest of vegetables", self.harvest_of_vegetables)
                 print("harvest of fruits", self.harvest_of_apples)
+            elif command == "weeding":
+                for _ in self.plants:
+                    self.weeding()
+                self.count_of_days = 0
             elif command == "next_day":
                 self.life_cycle()
+                self.count_of_days += 1
+                if self.count_of_days == 3:
+                    for plant in self.plants:
+                        if not plant.parameters["weed"]:
+                            self.getting_weed()
             elif command == "add_plant":
                 self.add_plant_on_game_map()
+            elif command == "help":
+                self.fertilizing_game_map()
             elif command == "add_tree":
                 self.add_trees_on_game_map()
             elif command == "add_pests":
                 self.add_pests_on_game_map()
             elif command == "water_plants":
                 self.watering_in_map()
+            elif command == "delete_pests":
+                for i in self.plants:
+                    if i.parameters["type_id"] == 2:
+                        self.delete_pest_from_garden()
+            elif command == "info":
+                try:
+                    x = input()
+                    y = input()
+                    z = input()
+                    if int(x) <= int(self.map_size[0]) and int(y) <= int(self.map_size[1]):
+                        self.plants_info(x, y, z)
+                    else:
+                        raise ()
+                except:
+                    print("Wrong coordinates")
             else:
-                raise()
+                raise ()
             self.step_save()
         except:
             print("Wrong command")
 
-    ############################    FIND FUNCTIONS    ############################
+    ############################    HELP FUNCTIONS    ############################
 
     def find_plant_position(self):
         x = random.randint(0, self.map_size[0] - 1)
@@ -109,17 +179,21 @@ class World:
 
     def add_pests_on_game_map(self):
         if self.check_to_add() is True:
-            new_pest = Pest(self.find_plant_position(), self)
-            self.plants.append(new_pest)
-            x = int(new_pest.parameters["coordinates"][0])
-            y = int(new_pest.parameters["coordinates"][1])
-            self.game_map[x][y].add_plant_on_cell(new_pest)
+            new_plant = Pest(self.find_plant_position(), self)
+            self.index += 1
+            new_plant.parameters["index"] = self.index
+            self.plants.append(new_plant)
+            x = int(new_plant.parameters["coordinates"][0])
+            y = int(new_plant.parameters["coordinates"][1])
+            self.game_map[x][y].add_plant_on_cell(new_plant)
         else:
             print("No place!")
 
     def add_plant_on_game_map(self):
         if self.check_to_add() is True:
             new_plant = Carrot(self.find_plant_position(), self)
+            self.index += 1
+            new_plant.parameters["index"] = self.index
             self.plants.append(new_plant)
             x = int(new_plant.parameters["coordinates"][0])
             y = int(new_plant.parameters["coordinates"][1])
@@ -129,21 +203,15 @@ class World:
 
     def add_trees_on_game_map(self):
         if self.check_to_add() is True:
-            new_plant = Tree(self.find_plant_position(), self)
+            new_plant = Trees(self.find_plant_position(), self)
+            self.index += 1
+            new_plant.parameters["index"] = self.index
             self.plants.append(new_plant)
             x = int(new_plant.parameters["coordinates"][0])
             y = int(new_plant.parameters["coordinates"][1])
             self.game_map[x][y].add_plant_on_cell(new_plant)
         else:
             print("No place!")
-
-    ############################    PRINT    ############################
-
-    def step_print(self):
-        for row in self.game_map:
-            for Cell in row:
-                print(Cell.print_cell())
-            # print("")
 
     ############################    AGING    ############################
 
@@ -155,7 +223,7 @@ class World:
                 smth.get_position()
                 x = int(smth.parameters["coordinates"][0])
                 y = int(smth.parameters["coordinates"][1])
-                self.game_map[x][y].remove_smth_from_cell(smth)
+                self.game_map[x][y].delete_smth_from_cell(smth)
 
     ############################    GROW UP FUNCTIONS    ############################
 
@@ -164,37 +232,37 @@ class World:
             if smth.parameters["type_id"] == 1:
                 if self.weather.parameters["weather_is"] == "sun":
                     smth = smth.get_rid_of_illness_check()
-                    smth = smth.grow_up()
+                    smth = smth.grow_up(self.count_of_days)
                 if self.weather.parameters["weather_is"] == "rain":
                     smth = smth.get_illness_check()
-                    smth = smth.grow_up()
+                    smth = smth.grow_up(self.count_of_days)
                 if self.weather.parameters["weather_is"] == "drought":
                     if not smth.parameters["watered"]:  # если не полито, то -10 хп и никакого роста
                         smth.parameters["life_points"] -= 10
                     if smth.parameters["watered"]:  # если полито, растём
-                        smth = smth.grow_up()
+                        smth = smth.grow_up(self.count_of_days)
                 if smth is not None:
                     self.harvest_of_vegetables += 1
                     self.plants.remove(smth)
                     smth.get_position()
                     x = int(smth.parameters["coordinates"][0])
                     y = int(smth.parameters["coordinates"][1])
-                    self.game_map[x][y].remove_smth_from_cell(smth)
+                    self.game_map[x][y].delete_smth_from_cell(smth)
 
     def trees_grow_up(self):
         for tree in self.plants:
             if tree.parameters["type_id"] == 3:
                 if self.weather.parameters["weather_is"] == "sun":
                     tree = tree.get_rid_of_illness_check()
-                    tree = tree.grow_up()
+                    tree = tree.grow_up(self.count_of_days)
                 if self.weather.parameters["weather_is"] == "rain":
                     tree = tree.get_illness_check()
-                    tree = tree.grow_up()
+                    tree = tree.grow_up(self.count_of_days)
                 if self.weather.parameters["weather_is"] == "drought":
                     if not tree.parameters["watered"]:  # если не полито, то -20 хп и никакого роста
                         tree.parameters["life_points"] -= 20
                     if tree.parameters["watered"]:  # если полито, растём
-                        tree = tree.grow_up()
+                        tree = tree.grow_up(self.count_of_days)
                     if tree is not None:
                         self.harvest_of_apples += 1
 
@@ -207,14 +275,16 @@ class World:
                 for plant_for_eat in self.plants:
                     if plant_for_eat.parameters["type_id"] == 1:
                         plant_for_eat.get_position()
-                        if int(plant_for_eat.parameters["coordinates"][0]) == int(pests.parameters["coordinates"][0])\
-                                and int(plant_for_eat.parameters["coordinates"][1]) == int(pests.parameters["coordinates"][1]):
+                        if int(plant_for_eat.parameters["coordinates"][0]) == int(
+                                pests.parameters["coordinates"][0]) and int(
+                                plant_for_eat.parameters["coordinates"][1]) == int(pests.parameters["coordinates"][1]):
                             plant_for_eat = pests.attack_plant(plant_for_eat)
                             if plant_for_eat is not None:
                                 self.died_from_pests += 1
                                 self.plants.remove(plant_for_eat)
                                 self.game_map[int(plant_for_eat.parameters["coordinates"][0])][
-                                     int(plant_for_eat.parameters["coordinates"][1])].remove_smth_from_cell(plant_for_eat)
+                                    int(plant_for_eat.parameters["coordinates"][1])].delete_smth_from_cell(
+                                    plant_for_eat)
 
     def damage_trees_on_map(self):
         for pests in self.plants:
@@ -223,14 +293,25 @@ class World:
                 for plant_for_eat in self.plants:
                     if plant_for_eat.parameters["type_id"] == 1:
                         plant_for_eat.get_position()
-                        if int(plant_for_eat.parameters["coordinates"][0]) == int(pests.parameters["coordinates"][0])\
-                                and int(plant_for_eat.parameters["coordinates"][1]) == int(pests.parameters["coordinates"][1]):
+                        if int(plant_for_eat.parameters["coordinates"][0]) == int(
+                                pests.parameters["coordinates"][0]) and int(
+                                plant_for_eat.parameters["coordinates"][1]) == int(pests.parameters["coordinates"][1]):
                             plant_for_eat = pests.attack_plant(plant_for_eat)
                             if plant_for_eat is not None:
                                 self.died_from_pests += 1
                                 self.plants.remove(plant_for_eat)
-                                self.game_map[int(plant_for_eat.parameters["coordinates"][0])][
-                                    int(plant_for_eat.parameters["coordinates"][1])].remove_smth_from_cell(plant_for_eat)
+
+    def delete_pest_from_garden(self):
+        for pests in self.plants:
+            if pests.parameters["type_id"] == 2:
+                pests.parameters["life_points"] = 0
+                pests = pests.opportunity_to_live()
+                if pests is not None:
+                    pests.get_position()
+                    x = int(pests.parameters["coordinates"][0])
+                    y = int(pests.parameters["coordinates"][1])
+                    self.game_map[x][y].delete_smth_from_cell(pests)
+                    self.plants.remove(pests)
 
     def everyday_hungry(self):
         for pests in self.plants:
@@ -247,7 +328,7 @@ class World:
                     smth.get_position()
                     x = int(smth.parameters["coordinates"][0])
                     y = int(smth.parameters["coordinates"][1])
-                    self.game_map[x][y].remove_smth_from_cell(smth)
+                    self.game_map[x][y].delete_smth_from_cell(smth)
                     self.plants.remove(smth)
                     self.died_from_hungry += 1
 
@@ -266,8 +347,8 @@ class World:
     def watering_in_map(self):
         for smth in self.plants:
             if smth.parameters["type_id"] == 1 or smth.parameters["type_id"] == 3:
-                smth = smth.water()
-        print("Plants watered!")  # чекаем сработало ли
+                smth.water()
+        print("Plants watered!")
 
     def want_to_water_plants(self):
         print("weather today:", self.weather.parameters["weather_is"])
@@ -282,7 +363,7 @@ class World:
                     print("no water")
                     break
                 else:
-                    raise()
+                    raise ()
             except:
                 print("Wrong command!")
 
@@ -297,14 +378,80 @@ class World:
         self.aging_in_map()
         self.opportunity_to_live_on_map()
         self.everyday_hungry()
-        """
-        print("умерли от вредителей", self.died_from_pests)
-        print("умерло от голода", self.died_from_hungry)
-        print("урожай овощей", self.harvest_of_vegetables)
-        print("урожай яблок", self.harvest_of_apples)
-        """
 
-    ############################    SAVE    ############################
+    ############################    INFORMATION   ############################
+
+    def plants_info(self, position_x, position_y, position_z):
+        x = int(position_x)
+        y = int(position_y)
+        idx = int(position_z)
+        if int(idx) <= len(self.game_map[x][y].all_in_cell):
+            name = self.game_map[x][y].all_in_cell[idx].parameters["name"]
+            print("name:" + name)
+            age = self.game_map[x][y].all_in_cell[idx].parameters["age"]
+            print("age:" + str(age))
+            life_points = self.game_map[x][y].all_in_cell[idx].parameters["life_points"]
+            print("life points:" + str(life_points))
+            weed = self.game_map[x][y].all_in_cell[idx].parameters["weed"]
+            print("weed: " + str(weed))
+            if int(self.game_map[x][y].all_in_cell[idx].parameters["type_id"]) == 1 or int(
+                    self.game_map[x][y].all_in_cell[idx].parameters["type_id"]) == 3:
+                points_to_grow = self.game_map[x][y].all_in_cell[idx].parameters["start_points"]
+                print("points to grow up :" + str(points_to_grow))
+                illness = self.game_map[x][y].all_in_cell[idx].parameters["illness"]
+                print("illness :" + str(illness))
+                watered = self.game_map[x][y].all_in_cell[idx].parameters["watered"]
+                print("watered :" + str(watered))
+            if int(self.game_map[x][y].all_in_cell[idx].parameters["type_id"]) == 2:
+                damage = self.game_map[x][y].all_in_cell[idx].parameters["damage"]
+                print("damage :" + str(damage))
+                hungry = self.game_map[x][y].all_in_cell[idx].parameters["hungry"]
+                print("hungry:" + str(hungry))
+            print("-------------------------------------------")
+        else:
+            raise (print("Wrong coordinates <<z>>"))
+
+    def step_print(self):
+        for row in self.game_map:
+            for Cell in row:
+                print(Cell.print_cell())
+            # print("")
+
+    ############################    WEEDING FUNCTIONS    ############################
+
+    def weeding(self):
+        for plant in self.plants:
+            if plant.parameters["type_id"] == 1 or plant.parameters["type_id"] == 2 or plant.parameters["type_id"] == 3:
+                plant.get_position()
+                plant.parameters["weed"] = False
+                x = int(plant.parameters["coordinates"][0])
+                y = int(plant.parameters["coordinates"][1])
+                index = plant.parameters["index"]
+                idx = self.game_map[x][y].get_cell_position(plant, index)
+                self.game_map[x][y].delete_weed_from_cell(idx, plant)
+
+    def getting_weed(self):
+        for plant in self.plants:
+            plant.parameters["weed"] = True
+            plant.get_position()
+            x = int(plant.parameters["coordinates"][0])
+            y = int(plant.parameters["coordinates"][1])
+            index = plant.parameters["index"]
+            idx = self.game_map[x][y].get_cell_position(plant, index)
+            self.game_map[x][y].add_weed_on_cell(idx)
+
+    ############################    FERTILIZING    ############################
+
+    def fertilizing_game_map(self):
+        for plant in self.plants:
+            if plant.parameters["type_id"] == 1:
+                plant.parameters["life_points"] = 100
+                plant.parameters["points_to_grow_up"] += 5
+            if plant.parameters["type_id"] == 3:
+                plant.parameters["life_points"] = 300
+                plant.parameters["points_to_grow_up"] += 4
+
+    ############################    SAVING    ############################
 
     def step_save(self):
         file = open(r'saved_game.txt', 'wb')
@@ -315,4 +462,5 @@ class World:
         for smth in self.plants:
             pickle.dump(smth, file)
         file.close()
-        # print("garden is saved")
+
+    #######################################################################

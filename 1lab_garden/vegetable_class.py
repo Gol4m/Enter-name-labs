@@ -1,4 +1,4 @@
-from plants_class import MainClass
+from plant_class import MainClass
 import random
 
 
@@ -6,6 +6,7 @@ class Carrot(MainClass):
     def __init__(self, coordinates, garden):
         super().__init__(garden)
         self.parameters = {
+            "index": 0,
             "type_id": 1,
             "name": "carrot",
             "symbol_on_map": "C",
@@ -16,7 +17,8 @@ class Carrot(MainClass):
             "points_to_grow_up": 12,
             "start_points": 0,
             "illness": False,
-            "watered": False
+            "watered": False,
+            "weed": False,
         }
 
     def aging(self):
@@ -32,12 +34,19 @@ class Carrot(MainClass):
         position = (x, y)
         return position
 
-    def grow_up(self):
+    def grow_up(self, days):
+        if self.parameters["weed"] is True:  # если есть сорняки
+            if days <= 2:
+                self.parameters["life_points"] -= 2
+            if 2 < days <= 4:
+                self.parameters["life_points"] -= 20
+            if days > 4:
+                self.parameters["life_points"] -= 50    
         if self.parameters["watered"]:  # растет только если полито
             self.parameters["start_points"] += 3
         if self.parameters["illness"]:  # если болезнь есть, то при росте отниметься 10 хп
             self.parameters["life_points"] -= 10
-        if self.parameters["points_to_grow_up"] <= self.parameters["start_points"] and self.parameters["life_points"] > 5:
+        if self.parameters["points_to_grow_up"] <= self.parameters["start_points"] and self.parameters["life_points"] > 15:
             return self
         else:
             return None

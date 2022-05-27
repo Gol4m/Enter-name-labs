@@ -1,8 +1,8 @@
-from plants_class import MainClass
+from plant_class import MainClass
 import random
 
 
-class Tree(MainClass):
+class Trees(MainClass):
     def __init__(self, coordinates, garden):
         super().__init__(garden)
         self.parameters = {
@@ -14,7 +14,7 @@ class Tree(MainClass):
             "coordinates": coordinates,
             "max_age": 100,
             "life_points": 300,
-            "points_to_grow_up": 20,
+            "points_to_grow_up": 8,
             "start_points": 0,
             "illness": False,
             "watered": False,
@@ -39,9 +39,9 @@ class Tree(MainClass):
             if days <= 2:
                 self.parameters["life_points"] -= 2
             if 2 < days <= 4:
-                self.parameters["life_points"] -= 10
-            if days > 4:
                 self.parameters["life_points"] -= 20
+            if days > 4:
+                self.parameters["life_points"] -= 50    
         if self.parameters["watered"]:  # растет только если полито
             self.parameters["start_points"] += 4
         if self.parameters["illness"]:  # если болезнь есть, то при росте отниметься 20 хп

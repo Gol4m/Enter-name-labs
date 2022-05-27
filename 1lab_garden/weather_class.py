@@ -3,7 +3,9 @@ import random
 
 class Weather:
     parameters = {
-        "weather_is": ""
+        "counter_for_plants": 0,
+        "counter_for_pests": 0,
+        "weather_is": "",
     }
 
     def __init__(self, world=None):

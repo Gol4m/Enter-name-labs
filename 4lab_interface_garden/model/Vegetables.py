@@ -1,5 +1,7 @@
 from model.PlantClass import MainClass
 import random
+
+
 class Carrot(MainClass):
     def __init__(self, coordinates, garden):
         super().__init__(garden)

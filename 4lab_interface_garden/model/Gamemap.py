@@ -184,7 +184,7 @@ class World:
                 smth.get_position()
                 x = int(smth.parameters["coordinates"][0])
                 y = int(smth.parameters["coordinates"][1])
-                self.game_map[x][y].remove_smth_from_cell(smth)
+                self.game_map[x][y].delete_smth_from_cell(smth)
 
     def plants_grow_up(self):
         for smth in self.plants:
@@ -206,7 +206,7 @@ class World:
                     smth.get_position()
                     x = int(smth.parameters["coordinates"][0])
                     y = int(smth.parameters["coordinates"][1])
-                    self.game_map[x][y].remove_smth_from_cell(smth)
+                    self.game_map[x][y].delete_smth_from_cell(smth)
 
     def trees_grow_up(self):
         for tree in self.plants:
@@ -236,7 +236,9 @@ class World:
                             if plant_for_eat is not None:
                                 self.died_from_pests += 1
                                 self.plants.remove(plant_for_eat)
-                                self.game_map[int(plant_for_eat.parameters["coordinates"][0])][int(plant_for_eat.parameters["coordinates"][1])].remove_smth_from_cell(plant_for_eat)
+                                self.game_map[int(plant_for_eat.parameters["coordinates"][0])][
+                                    int(plant_for_eat.parameters["coordinates"][1])].delete_smth_from_cell(
+                                    plant_for_eat)
             
 
     def damage_trees_on_map(self):
@@ -261,7 +263,7 @@ class World:
                 smth.get_position()
                 x = int(smth.parameters["coordinates"][0])
                 y = int(smth.parameters["coordinates"][1])
-                self.game_map[x][y].remove_smth_from_cell(smth)
+                self.game_map[x][y].delete_smth_from_cell(smth)
                 self.plants.remove(smth)
                 if smth.parameters["type_id"] == 2:
                     self.died_from_hungry += 1
@@ -377,7 +379,7 @@ class World:
                     pests.get_position()
                     x = int(pests.parameters["coordinates"][0])
                     y = int(pests.parameters["coordinates"][1])
-                    self.game_map[x][y].remove_smth_from_cell(pests)
+                    self.game_map[x][y].delete_smth_from_cell(pests)
                     self.plants.remove(pests)
                     
     def spisok(self):

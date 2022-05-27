@@ -1,4 +1,4 @@
-from plants_class import MainClass
+from plant_class import MainClass
 
 
 class Pest(MainClass):
@@ -13,7 +13,7 @@ class Pest(MainClass):
             "coordinates": coordinates,
             "max_age": 10,
             "life_points": 100,
-            "damage": 10,
+            "damage": 40,
             "hungry": True,
             "weed": False
         }

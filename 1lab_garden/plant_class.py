@@ -1,6 +1,6 @@
-
 class MainClass:
     parameters = {
+        "index": 0,
         "type_id": 0,
         "name": "",
         "symbol_on_map": "",
@@ -11,7 +11,8 @@ class MainClass:
         "factor_grow_up": 0,
         "factor_plants": 0,
         "factor_pests": 0,
-        "hungry": True
+        "hungry": True,
+        "weed": False
     }
 
     def __init__(self, world=None):
@@ -27,7 +28,7 @@ class MainClass:
     def get_position(self):
         pass
 
-    def grow_up(self):
+    def grow_up(self, days):
         pass
 
     def opportunity_to_live(self):
