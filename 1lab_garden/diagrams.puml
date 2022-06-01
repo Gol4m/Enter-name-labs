@@ -1,0 +1,231 @@
+@startuml
+
+abstract class MainClass{
+        "index": 0
+        "type_id": 0
+        "name": ""
+        "symbol_on_map": ""
+        "age": 0
+        "coordinates": tuple
+        "max_age": 0
+        "life_points": 0
+        "factor_grow_up": 0
+        "factor_plants": 0
+        "factor_pests": 0
+        "hungry": True
+        "weed": False
+
+        attack_plant(self, plant_to_attack)
+        aging(self)
+        get_position(self)
+        grow_up(self, days)
+        opportunity_to_live(self)
+}
+
+class Tree{
+        "type_id": 3
+        "index": 0
+        "name": "tree"
+        "symbol_on_map": "T"
+        "age": 0
+        "coordinates": coordinates
+        "max_age": 100
+        "life_points": 300
+        "points_to_grow_up": 8
+        "start_points": 0
+        "illness": False
+        "watered": False
+        "weed": False
+
+        aging(self)
+        get_position(self)
+        grow_up(self, days)
+        opportunity_to_live(self)
+        get_illness_check(self)
+        get_rid_of_illness_check(self)
+        water(self)
+}
+
+class Carrot{
+            "index": 0
+            "type_id": 1
+            "name": "carrot"
+            "symbol_on_map": "C"
+            "age": 0
+            "coordinates": coordinates
+            "max_age": 8
+            "life_points": 100
+            "points_to_grow_up": 12
+            "start_points": 0
+            "illness": False
+            "watered": False
+            "weed": False
+
+            aging(self)
+            get_position(self)
+            grow_up(self, days)
+            opportunity_to_live(self)
+            get_illness_check(self)
+            get_rid_of_illness_check(self)
+            water(self)
+}
+
+class Pests{
+            "index": 0
+            "type_id": 2
+            "name": "pests"
+            "symbol_on_map": "P"
+            "age": 0
+            "coordinates": coordinates
+            "max_age": 10
+            "life_points": 100
+            "damage": 40
+            "hungry": True
+            "weed": False
+
+            aging(self)
+            get_position(self)
+            attack_plant(self, plant_for_eat)
+            opportunity_to_live(self)
+            kill_pest(self)
+}
+
+class Weather{
+        "counter_for_plants": 0
+        "counter_for_pests": 0
+        "weather_is": ""
+        type_of_weather = ["sun", "rain"]
+
+        what_weather_today(self)
+}
+
+class World{
+        self.game_map = list
+        self.map_size = map_size
+        self.plants = list
+        self.weather = Weather
+        self.step = 0
+        self.harvest_of_vegetables = 0
+        self.harvest_of_apples = 0
+        self.died_from_pests = 0
+        self.died_from_hungry = 0
+        self.died_from_illness = 0
+        self.weather_today_is = ""
+        self.index = 0
+        self.count_of_days = 0
+
+        commands(self, command)
+        start_garden(self)
+        find_plant_position(self)
+        check_to_add(self)
+        add_pests_on_game_map(self)
+        add_plant_on_game_map(self)
+        add_trees_on_game_map(self)
+        aging_in_map(self)
+        plants_grow_up(self)
+        trees_grow_up(self)
+        eat_plant_on_map(self)
+        damage_trees_on_map(self)
+        delete_pest_from_garden(self)
+        everyday_hungry(self)
+        opportunity_to_live_on_map(self)
+        weather_today(self)
+        watering_in_map(self)
+        want_to_water_plants(self)
+        life_cycle(self)
+        plants_info(self, position_x, position_y, position_z)
+        step_print(self)
+        weeding(self)
+        getting_weed(self)
+        fertilizing_game_map(self)
+        step_save(self)
+}
+
+class Cell{
+            coordinates = tuple
+            all_in_cell = list
+            list_for_print = list
+            new_list = list
+            _coordinates = coordinates
+            all_in_cell = list
+            list_for_print = list
+
+            add_plant_on_cell(self, plant)
+            add_weed_on_cell(self, idx)
+            delete_weed_from_cell(self, idx, plant)
+            delete_smth_from_cell(self, smth)
+            check_to_add_in_cell(self)
+            get_cell_position(self, smth, index)
+            print_cell(self)
+}
+
+Tree <|-- MainClass
+Carrot <|-- MainClass
+Pests <|-- MainClass
+
+Cell --* World
+
+@enduml
+
+
+@startuml
+
+
+[*] --> Command_input
+
+Command_input : start-garden
+Command_input : next-day
+Command_input : add-plant
+Command_input : add-tree
+Command_input : add-pests
+Command_input : del-pests
+Command_input : weeding
+Command_input : water-plants
+Command_input : help-plants
+Command_input : save-garden
+Command_input : info
+
+start_garden : generate garden \nwith pre-ready entities
+
+life_cycle : self.weather_today() \nself.want_to_water_plants()\nself.plants_grow_up()
+life_cycle : self.trees_grow_up()\nself.eat_plant_on_map()\nself.aging_in_map()
+life_cycle : self.opportunity_to_live_on_map()\nself.everyday_hungry()
+life_cycle : self.count_of_days += 1
+
+add_plant : self.add_plant_on_game_map()
+add_tree : self.add_trees_on_game_map()
+add_pests : self.add_pests_on_game_map()
+del_pests : self.delete_pest_from_garden()
+weeding : self.weeding()
+water_plants : self.watering_in_map()
+help_plants : self.fertilizing_game_map()
+save_garden : self.step_save()
+info : self.plants_info(x, y, z)
+
+
+Command_input --> start_garden : start-garden
+Command_input --> life_cycle : next-day
+Command_input --> add_plant : add-plant
+Command_input --> add_tree : add-tree
+Command_input --> add_pests : add-pests
+Command_input --> del_pests : del-pests
+Command_input --> weeding : weeding
+Command_input --> water_plants : water-plants
+Command_input --> help_plants : help-plants
+Command_input --> save_garden : save-garden
+Command_input --> info : info
+
+start_garden -> Command_input
+life_cycle -> Command_input
+add_plant -> Command_input
+add_tree -> Command_input
+add_pests -> Command_input
+del_pests -> Command_input
+weeding -> Command_input
+water_plants -> Command_input
+help_plants -> Command_input
+save_garden -> Command_input
+info --> Command_input
+
+Command_input ---> [*] : exit
+@enduml
