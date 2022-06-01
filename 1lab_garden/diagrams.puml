@@ -165,6 +165,11 @@ Pests <|-- MainClass
 
 Cell --* World
 
+World <-- Weather: part-of
+World <-- Tree: part-of
+World <-- Carrot: part-of
+World <-- Pests: part-of
+
 @enduml
 
 
