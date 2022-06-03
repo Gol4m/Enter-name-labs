@@ -1,5 +1,5 @@
 import pygame
-from controller.controler import Controller
+from controller.controller import Controller
 from settings import *
 import pygame_widgets
 from pygame_widgets.button import Button
@@ -68,6 +68,30 @@ class App:
                     self.running = False
 
     def draw_next_day(self):
+        self.draw_background()
+        self.draw_1line()
+        self.draw_2line()
+
+        self.draw_buttons()
+        event = pygame.event.get()
+        pygame_widgets.update(event)
+        pygame.display.update()
+
+    ########################      DRAW FUNCTIONS     ########################
+
+    def draw_1line(self):
+        count_c = 60
+        count_c = self.draw_carrots_1line(self, count_c)
+        count_c = self.draw_trees_1line(self, count_c)
+        self.draw_pests_1line(self, count_c)
+
+    def draw_2line(self):
+        count_c = 60
+        count_c = self.draw_carrots_2line(self, count_c)
+        count_c = self.draw_trees_2line(self, count_c)
+        self.draw_pests_2line(self, count_c)
+
+    def draw_background(self):
         self.screen.fill(BLACK)
         back = pygame.image.load("images/garden_background.png")
         self.screen.blit(back, (20, 75))
@@ -84,7 +108,8 @@ class App:
             self.screen.blit(sky1, (120, 130))
             self.screen.blit(sky3, (400, 110))
             self.screen.blit(sky2, (250, 170))
-        count_c = 60
+
+    def draw_carrots_1line(self, count_c):
         for plant in self.controller.garden.game_map[0][0].all_in_cell:
             if plant.parameters["type_id"] == 1:
                 if plant.parameters["age"] <= 1:
@@ -112,7 +137,11 @@ class App:
                     illness.set_colorkey(WHITE)
                     self.screen.blit(illness, (100 + count_c, coord_y_0_0))
                 count_c += 100
-            elif plant.parameters["type_id"] == 3:
+        return count_c
+
+    def draw_trees_1line(self, count_c):
+        for plant in self.controller.garden.game_map[0][0].all_in_cell:
+            if plant.parameters["type_id"] == 3:
                 if plant.parameters["age"] <= 1:
                     carrot = pygame.image.load("images/tree_1.png")
                     carrot.set_colorkey(WHITE)
@@ -170,12 +199,18 @@ class App:
                     illness.set_colorkey(WHITE)
                     self.screen.blit(illness, (100 + count_c, coord_y_0_0))
                 count_c += 120
-            elif plant.parameters["type_id"] == 2:
+        return count_c
+
+    def draw_pests_1line(self, count_c):
+        for plant in self.controller.garden.game_map[0][0].all_in_cell:
+            if plant.parameters["type_id"] == 2:
                 pest = pygame.image.load("images/c_pest.png")
                 pest.set_colorkey(WHITE)
                 self.screen.blit(pest, (45 + count_c, coord_y_0_0))
                 count_c += 120
-        count_c = 60
+        return count_c
+
+    def draw_carrots_2line(self, count_c):
         for plant in self.controller.garden.game_map[0][1].all_in_cell:
             if plant.parameters["type_id"] == 1:
                 if plant.parameters["age"] <= 1:
@@ -203,7 +238,11 @@ class App:
                     illness.set_colorkey(WHITE)
                     self.screen.blit(illness, (100 + count_c, coord_y_0_1))
                 count_c += 100
-            elif plant.parameters["type_id"] == 3:
+        return count_c
+
+    def draw_trees_2line(self, count_c):
+        for plant in self.controller.garden.game_map[0][0].all_in_cell:
+            if plant.parameters["type_id"] == 3:
                 if plant.parameters["age"] <= 1:
                     carrot = pygame.image.load("images/tree_1.png")
                     carrot.set_colorkey(WHITE)
@@ -261,16 +300,17 @@ class App:
                     illness.set_colorkey(WHITE)
                     self.screen.blit(illness, (100 + count_c, coord_y_0_1))
                 count_c += 120
-            elif plant.parameters["type_id"] == 2:
+        return count_c
+
+    def draw_pests_2line(self, count_c):
+        for plant in self.controller.garden.game_map[0][0].all_in_cell:
+            if plant.parameters["type_id"] == 2:
                 pest = pygame.image.load("images/c_pest.png")
                 pest.set_colorkey(WHITE)
                 self.screen.blit(pest, (45 + count_c, coord_y_0_1))
                 count_c += 120
+        return count_c
 
-        self.draw_buttons()
-        event = pygame.event.get()
-        pygame_widgets.update(event)
-        pygame.display.update()
         ########################       GARDEN INFO FUNCTIONS      ########################
 
     def garden_info_events(self):
@@ -784,204 +824,10 @@ class App:
                     self.running = False
 
     def draw_info(self):
-        self.screen.fill(BLACK)
-        back = pygame.image.load("images/garden_background.png")
-        self.screen.blit(back, (20, 75))
-        if self.controller.get_weather() == "sun":
-            sky = pygame.image.load("images/sunny.png")
-            self.screen.blit(sky, (120, 130))
-        elif self.controller.get_weather() == "drought":
-            sky = pygame.image.load("images/sunny_02.png")
-            self.screen.blit(sky, (120, 130))
-        elif self.controller.get_weather() == "rain":
-            sky1 = pygame.image.load("images/rain_1.png")
-            sky2 = pygame.image.load("images/rain_2.png")
-            sky3 = pygame.image.load("images/rain_3.png")
-            self.screen.blit(sky1, (120, 130))
-            self.screen.blit(sky3, (400, 110))
-            self.screen.blit(sky2, (250, 170))
-        count_c = 60
-        for plant in self.controller.garden.game_map[0][0].all_in_cell:
-            if plant.parameters["type_id"] == 1:
-                if plant.parameters["age"] <= 1:
-                    carrot = pygame.image.load("images/carrot_1.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0))
-                elif 1 < plant.parameters["age"] <= 2:
-                    carrot = pygame.image.load("images/carrot_2.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0))
-                elif 2 < plant.parameters["age"] <= 3:
-                    carrot = pygame.image.load("images/carrot_3.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0))
-                elif 3 < plant.parameters["age"] <= 4:
-                    carrot = pygame.image.load("images/carrot_4.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0))
-                if plant.parameters["weed"]:
-                    weed = pygame.image.load("images/trava.png")
-                    weed.set_colorkey(WHITE)
-                    self.screen.blit(weed, (20 + count_c, coord_y_0_0 + 30))
-                if plant.parameters["illness"]:
-                    illness = pygame.image.load("images/illness.png")
-                    illness.set_colorkey(WHITE)
-                    self.screen.blit(illness, (100 + count_c, coord_y_0_0))
-                count_c += 100
-            elif plant.parameters["type_id"] == 3:
-                if plant.parameters["age"] <= 1:
-                    carrot = pygame.image.load("images/tree_1.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0))
-                elif 1 < plant.parameters["age"] <= 2:
-                    carrot = pygame.image.load("images/tree_2.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif 2 < plant.parameters["age"] <= 3:
-                    carrot = pygame.image.load("images/tree_3.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif 3 < plant.parameters["age"] <= 4:
-                    carrot = pygame.image.load("images/tree_4.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif 4 < plant.parameters["age"] <= 5:
-                    carrot = pygame.image.load("images/tree_5.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif 5 < plant.parameters["age"] <= 6:
-                    carrot = pygame.image.load("images/tree_6.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif 6 < plant.parameters["age"] <= 7 or plant.parameters["points_to_grow_up"] <= 15:
-                    carrot = pygame.image.load("images/tree_7.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif 7 < plant.parameters["age"] <= 8 and plant.parameters["points_to_grow_up"] >= 15:
-                    carrot = pygame.image.load("images/tree_8.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif 8 < plant.parameters["age"] <= 9 and plant.parameters["points_to_grow_up"] >= 18:
-                    carrot = pygame.image.load("images/tree_9.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif plant.parameters["age"] > 9 and plant.parameters["points_to_grow_up"] <= 10:
-                    carrot = pygame.image.load("images/tree_7.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif plant.parameters["age"] > 9 and plant.parameters["points_to_grow_up"] <= 15:
-                    carrot = pygame.image.load("images/tree_8.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                elif plant.parameters["age"] > 9 and plant.parameters["points_to_grow_up"] > 19:
-                    carrot = pygame.image.load("images/tree_9.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_0 - 50))
-                if plant.parameters["weed"]:
-                    weed = pygame.image.load("images/trava.png")
-                    weed.set_colorkey(WHITE)
-                    self.screen.blit(weed, (20 + count_c, coord_y_0_0 + 35))
-                if plant.parameters["illness"]:
-                    illness = pygame.image.load("images/illness.png")
-                    illness.set_colorkey(WHITE)
-                    self.screen.blit(illness, (100 + count_c, coord_y_0_0))
-                count_c += 120
-            elif plant.parameters["type_id"] == 2:
-                pest = pygame.image.load("images/c_pest.png")
-                pest.set_colorkey(WHITE)
-                self.screen.blit(pest, (45 + count_c, coord_y_0_0))
-                count_c += 120
-        count_c = 60
-        for plant in self.controller.garden.game_map[0][1].all_in_cell:
-            if plant.parameters["type_id"] == 1:
-                if plant.parameters["age"] <= 1:
-                    carrot = pygame.image.load("images/carrot_1.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1))
-                elif 1 < plant.parameters["age"] <= 2:
-                    carrot = pygame.image.load("images/carrot_2.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1))
-                elif 2 < plant.parameters["age"] <= 3:
-                    carrot = pygame.image.load("images/carrot_3.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1))
-                elif 3 < plant.parameters["age"] <= 4:
-                    carrot = pygame.image.load("images/carrot_4.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1))
-                if plant.parameters["weed"]:
-                    weed = pygame.image.load("images/trava.png")
-                    weed.set_colorkey(WHITE)
-                    self.screen.blit(weed, (20 + count_c, coord_y_0_1 + 30))
-                if plant.parameters["illness"]:
-                    illness = pygame.image.load("images/illness.png")
-                    illness.set_colorkey(WHITE)
-                    self.screen.blit(illness, (100 + count_c, coord_y_0_1))
-                count_c += 100
-            elif plant.parameters["type_id"] == 3:
-                if plant.parameters["age"] <= 1:
-                    carrot = pygame.image.load("images/tree_1.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1))
-                elif 1 < plant.parameters["age"] <= 2:
-                    carrot = pygame.image.load("images/tree_2.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif 2 < plant.parameters["age"] <= 3:
-                    carrot = pygame.image.load("images/tree_3.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif 3 < plant.parameters["age"] <= 4:
-                    carrot = pygame.image.load("images/tree_4.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif 4 < plant.parameters["age"] <= 5:
-                    carrot = pygame.image.load("images/tree_5.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif 5 < plant.parameters["age"] <= 6:
-                    carrot = pygame.image.load("images/tree_6.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif 6 < plant.parameters["age"] <= 7 or plant.parameters["points_to_grow_up"] <= 15:
-                    carrot = pygame.image.load("images/tree_7.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif 7 < plant.parameters["age"] <= 8 and plant.parameters["points_to_grow_up"] >= 15:
-                    carrot = pygame.image.load("images/tree_8.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif 8 < plant.parameters["age"] <= 9 and plant.parameters["points_to_grow_up"] >= 18:
-                    carrot = pygame.image.load("images/tree_9.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif plant.parameters["age"] > 9 and plant.parameters["points_to_grow_up"] <= 10:
-                    carrot = pygame.image.load("images/tree_7.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif plant.parameters["age"] > 9 and plant.parameters["points_to_grow_up"] <= 15:
-                    carrot = pygame.image.load("images/tree_8.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                elif plant.parameters["age"] > 9 and plant.parameters["points_to_grow_up"] > 19:
-                    carrot = pygame.image.load("images/tree_9.png")
-                    carrot.set_colorkey(WHITE)
-                    self.screen.blit(carrot, (20 + count_c, coord_y_0_1 - 50))
-                if plant.parameters["weed"]:
-                    weed = pygame.image.load("images/trava.png")
-                    weed.set_colorkey(WHITE)
-                    self.screen.blit(weed, (20 + count_c, coord_y_0_1 + 35))
-                if plant.parameters["illness"]:
-                    illness = pygame.image.load("images/illness.png")
-                    illness.set_colorkey(WHITE)
-                    self.screen.blit(illness, (100 + count_c, coord_y_0_1))
-                count_c += 120
-            elif plant.parameters["type_id"] == 2:
-                pest = pygame.image.load("images/c_pest.png")
-                pest.set_colorkey(WHITE)
-                self.screen.blit(pest, (45 + count_c, coord_y_0_1))
-                count_c += 120
+        self.draw_background()
+        self.draw_1line()
+        self.draw_2line()
+
         self.add_button_1(720, 70)
         self.add_button_2(780, 70)
         self.add_button_01(650, 170)
