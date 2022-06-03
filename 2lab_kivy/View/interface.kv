@@ -1,0 +1,59 @@
+#: kivy 2.0.0
+#:import Factory kivy.factory.Factory
+
+MenuWidgets
+
+<MenuWidgets>
+
+    Label:
+        text: "Main menu"
+        font_size: '40sp'
+        pos_hint:{"x":0, "y":0.35}
+
+    GridLayout:
+        cols: 2
+        size_hint: 1, 0.6
+        pos_hint:{"x":0, "y":0.1}
+        Button:
+            text: "Create new table"
+            font_size: '20sp'
+            on_press: Factory.CreatePopup().open()
+
+        Button:
+            text: "List of tables"
+            font_size: '20sp'
+            on_press: root.click_event(self)
+
+<CreatePopup@Popup>:
+    background: ''
+    background_color: .192, .192, .192, 1
+    auto_dismiss: False
+    title: "Create new table"
+    size_hint: .5, .5
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 5
+        TextInput:
+            hint_text: 'Enter name of table'
+            pos_hint:{"x":0, "y":1}
+            size_hint_y: 1
+        BoxLayout:
+            orientation: "vertical"
+            padding: 20
+            spacing: 5
+            size_hint: 1, .8
+
+        GridLayout:
+            cols: 2
+            size_hint: 1, .5
+            Button:
+                text: "Close"
+                font_size: '15sp'
+                on_press: root.dismiss()
+
+            Button:
+                text: "Create table"
+                font_size: '15sp'
+                on_release: root.create_new_table
+                on_press: popup.dismiss
